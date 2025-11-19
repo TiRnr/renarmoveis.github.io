@@ -11,7 +11,15 @@
 <script>
 // 1. Pega o usuário da URL
 const params = new URLSearchParams(window.location.search);
-const user = params.get("u") || "desconhecido";
+let user = "desconhecido";
+
+if (params.has("u") && params.get("u").trim() !== "") {
+    user = params.get("u").trim();
+}
+
+// Força log para debug
+console.log("Usuário detectado:", user);
+
 
 // 2. Mostra o usuário detectado
 document.getElementById("info").innerHTML = `
