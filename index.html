@@ -9,56 +9,41 @@
 <div id="info" style="font-family: Arial; padding: 20px;"></div>
 
 <script>
+async function registrarAcesso() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const user = urlParams.get("u") || "desconhecido";
 
-  alert("Usuário recebido: " + user);
+    // pegar IP real via API
+    let ip = "desconhecido";
+    try {
+        const ipResp = await fetch("https://api.ipify.org?format=json");
+        const ipData = await ipResp.json();
+        ip = ipData.ip;
+    } catch (e) {
+        console.log("Erro ao obter IP");
+    }
 
-// 1. Pega o usuário da URL
-const params = new URLSearchParams(window.location.search);
-let user = "desconhecido";
+    const agent = navigator.userAgent;
 
-if (params.has("u") && params.get("u").trim() !== "") {
-    user = params.get("u").trim();
+    const endpoint = "https://script.google.com/macros/s/AKfycby-pe7jjk_GWwzIJoszKDcThV0AClgqUEkdd1YKymV4ywRuGu7zrIpKLcS68cqT_5oetw/exec";
+
+    // enviar para Apps Script
+    fetch(`${endpoint}?user=${encodeURIComponent(user)}&ip=${encodeURIComponent(ip)}&agent=${encodeURIComponent(agent)}`)
+        .then(r => r.text())
+        .then(t => {
+            if (t === "OK") {
+                console.log("Registrado com sucesso");
+            } else {
+                console.log("Erro do servidor:", t);
+            }
+        })
+        .catch(err => console.log("Falha:", err));
 }
 
-// Força log para debug
-console.log("Usuário detectado:", user);
-
-
-// 2. Mostra o usuário detectado
-document.getElementById("info").innerHTML = `
-  <h2>Usuário detectado: <strong>${user}</strong></h2>
-  <p>Registrando acesso...</p>
-`;
-
-// 3. Obtém o IP público e envia os dados
-fetch("https://api.ipify.org?format=json")
-  .then(r => r.json())
-  .then(ipData => {
-
-    // Envia para o Google Sheets
-    fetch("https://script.google.com/macros/s/AKfycbzUmtkzizRcVm8jOeX4lf73sRoX2H7HxvKG_5DZLW6JfX-e5b1wYjyDTLFznlBMhq55zw/exec", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        user: user,
-        ip: ipData.ip,
-        agent: navigator.userAgent
-      })
-    })
-    .then(() => {
-      // Atualiza mensagem após registrar
-      document.getElementById("info").innerHTML += `
-        <p style="color: green;">Acesso registrado com sucesso!</p>
-      `;
-    })
-    .catch(err => {
-      document.getElementById("info").innerHTML += `
-        <p style="color: red;">Erro ao registrar acesso.</p>
-      `;
-    });
-
-});
+// Executar automaticamente ao abrir a página
+registrarAcesso();
 </script>
+
 
 <hr>
 
