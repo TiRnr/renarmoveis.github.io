@@ -1,37 +1,57 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Meu Site</title>
+  <meta charset="utf-8">
+  <title>Registro de Acesso</title>
 </head>
 <body>
-  <div id="info"></div>
+
+<div id="info" style="font-family: Arial; padding: 20px;"></div>
 
 <script>
 // 1. Pega o usuário da URL
 const params = new URLSearchParams(window.location.search);
-const user = params.get('u');
+const user = params.get("u") || "desconhecido";
 
-// 2. Mostra quem entrou
-if (user) {
-    document.getElementById("info").innerHTML = `
-        <h2>Usuário detectado: <strong>${user}</strong></h2>
-    `;
-} else {
-    document.getElementById("info").innerHTML = `
-        <h2>Nenhum usuário identificado</h2>
-    `;
-}
+// 2. Mostra o usuário detectado
+document.getElementById("info").innerHTML = `
+  <h2>Usuário detectado: <strong>${user}</strong></h2>
+  <p>Registrando acesso...</p>
+`;
 
-// 3. (Depois eu coloco aqui a parte de registrar o acesso)
+// 3. Obtém o IP público e envia os dados
+fetch("https://api.ipify.org?format=json")
+  .then(r => r.json())
+  .then(ipData => {
+
+    // Envia para o Google Sheets
+    fetch("https://script.google.com/macros/s/AKfycbzUmtkzizRcVm8jOeX4lf73sRoX2H7HxvKG_5DZLW6JfX-e5b1wYjyDTLFznlBMhq55zw/exec", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        user: user,
+        ip: ipData.ip,
+        agent: navigator.userAgent
+      })
+    })
+    .then(() => {
+      // Atualiza mensagem após registrar
+      document.getElementById("info").innerHTML += `
+        <p style="color: green;">Acesso registrado com sucesso!</p>
+      `;
+    })
+    .catch(err => {
+      document.getElementById("info").innerHTML += `
+        <p style="color: red;">Erro ao registrar acesso.</p>
+      `;
+    });
+
+});
 </script>
 
-<!-- 4. Seu formulário depois -->
-<form>
-    <h3>Formulário</h3>
-    <label>Digite algo:</label>
-    <input type="text">
-    <button type="submit">Enviar</button>
-</form>
+<hr>
 
-</body>
-</html>
+<!-- Formulário -->
+<div style="font-family: Arial; padding: 20px;">
+  <h3>Formulário</h3>
+  <form>
