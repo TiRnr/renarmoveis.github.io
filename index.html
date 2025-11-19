@@ -13,36 +13,34 @@ async function registrarAcesso() {
     const urlParams = new URLSearchParams(window.location.search);
     const user = urlParams.get("u") || "desconhecido";
 
-    // pegar IP real via API
     let ip = "desconhecido";
+
+    // esperar REALMENTE o IP antes de continuar
     try {
-        const ipResp = await fetch("https://api.ipify.org?format=json");
-        const ipData = await ipResp.json();
-        ip = ipData.ip;
+        const resp = await fetch("https://api.ipify.org?format=json");
+        const json = await resp.json();
+        ip = json.ip;
     } catch (e) {
-        console.log("Erro ao obter IP");
+        console.log("Erro ao pegar IP:", e);
     }
 
     const agent = navigator.userAgent;
 
     const endpoint = "https://script.google.com/macros/s/AKfycby-pe7jjk_GWwzIJoszKDcThV0AClgqUEkdd1YKymV4ywRuGu7zrIpKLcS68cqT_5oetw/exec";
 
-    // enviar para Apps Script
-    fetch(`${endpoint}?user=${encodeURIComponent(user)}&ip=${encodeURIComponent(ip)}&agent=${encodeURIComponent(agent)}`)
-        .then(r => r.text())
-        .then(t => {
-            if (t === "OK") {
-                console.log("Registrado com sucesso");
-            } else {
-                console.log("Erro do servidor:", t);
-            }
-        })
-        .catch(err => console.log("Falha:", err));
+    try {
+        const send = await fetch(`${endpoint}?user=${encodeURIComponent(user)}&ip=${encodeURIComponent(ip)}&agent=${encodeURIComponent(agent)}`);
+        const text = await send.text();
+        console.log("Resposta:", text);
+    } catch (err) {
+        console.log("Erro ao registrar:", err);
+    }
 }
 
-// Executar automaticamente ao abrir a página
-registrarAcesso();
+// garantir execução somente após toda página carregar
+window.addEventListener("load", registrarAcesso);
 </script>
+
 
 
 <hr>
