@@ -7,27 +7,24 @@
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            padding: 50px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            background: linear-gradient(135deg, #1a2980 0%, #26d0ce 100%);
             min-height: 100vh;
             margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
         }
         
         .container {
             background: white;
-            padding: 40px;
+            padding: 30px;
             border-radius: 15px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            max-width: 500px;
-            width: 90%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            max-width: 600px;
+            margin: 50px auto;
         }
         
         h1 {
-            color: #333;
-            margin-bottom: 30px;
+            color: #1a2980;
+            margin-bottom: 10px;
         }
         
         .status {
@@ -35,43 +32,56 @@
             border-radius: 10px;
             margin: 20px 0;
             font-weight: bold;
-            display: none;
+            font-size: 18px;
         }
         
         .success {
             background: #d4edda;
             color: #155724;
             border: 2px solid #c3e6cb;
-            display: block;
         }
         
-        .loading {
+        .warning {
             background: #fff3cd;
             color: #856404;
             border: 2px solid #ffeaa7;
-            display: block;
         }
         
         .error {
             background: #f8d7da;
             color: #721c24;
             border: 2px solid #f5c6cb;
-            display: block;
         }
         
-        .user-info {
+        .info-box {
             background: #f8f9fa;
             padding: 20px;
             border-radius: 10px;
             margin: 20px 0;
-            font-size: 18px;
+            text-align: left;
         }
         
-        .spinner {
+        .info-item {
+            margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .info-label {
+            font-weight: bold;
+            color: #555;
+        }
+        
+        .info-value {
+            color: #1a2980;
+            font-family: monospace;
+        }
+        
+        .loading-spinner {
             width: 20px;
             height: 20px;
             border: 3px solid rgba(0,0,0,0.1);
-            border-top-color: #667eea;
+            border-top-color: #1a2980;
             border-radius: 50%;
             animation: spin 1s linear infinite;
             display: inline-block;
@@ -82,122 +92,186 @@
             to { transform: rotate(360deg); }
         }
         
-        .info {
+        .instructions {
             margin-top: 30px;
-            color: #666;
+            padding: 15px;
+            background: #e8f4f8;
+            border-radius: 8px;
             font-size: 14px;
+            color: #555;
+        }
+        
+        .link-example {
+            background: #f0f0f0;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: monospace;
+            word-break: break-all;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>✅ Registro de Acesso</h1>
+        <h1>✅ Sistema de Registro</h1>
+        <p>Registro automático por código</p>
         
-        <div class="status" id="status"></div>
-        
-        <div class="user-info" id="userInfo">
-            Aguardando código...
+        <div class="status" id="status">
+            <div class="loading-spinner"></div>
+            Iniciando sistema...
         </div>
         
-        <div class="info">
-            <p>Sistema de registro automático</p>
-            <p>Seu acesso está sendo registrado</p>
+        <div class="info-box" id="infoBox">
+            <div class="info-item">
+                <span class="info-label">Código detectado:</span>
+                <span class="info-value" id="codigoValue">-</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Nome associado:</span>
+                <span class="info-value" id="nomeValue">-</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">IP:</span>
+                <span class="info-value" id="ipValue">-</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Data/Hora:</span>
+                <span class="info-value" id="dataValue">-</span>
+            </div>
+        </div>
+        
+        <div class="instructions">
+            <h3>📋 Como usar:</h3>
+            <p>1. Use links como:</p>
+            <div class="link-example">https://tirnr.github.io/?c=3</div>
+            <div class="link-example">https://tirnr.github.io/?c=1</div>
+            <div class="link-example">https://tirnr.github.io/?c=2</div>
+            <p>2. O sistema registra automaticamente</p>
+            <p>3. Verifique a planilha Google para ver os registros</p>
         </div>
     </div>
 
     <script>
-        // Configuração - COLE SUA URL AQUI!
+        // URL do Google Apps Script (COLE A SUA AQUI)
         const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby-pe7jjk_GWwzIJoszKDcThV0AClgqUEkdd1YKymV4ywRuGu7zrIpKLcS68cqT_5oetw/exec';
         
         // Elementos DOM
-        const statusDiv = document.getElementById('status');
-        const userInfo = document.getElementById('userInfo');
+        const statusEl = document.getElementById('status');
+        const codigoValueEl = document.getElementById('codigoValue');
+        const nomeValueEl = document.getElementById('nomeValue');
+        const ipValueEl = document.getElementById('ipValue');
+        const dataValueEl = document.getElementById('dataValue');
+        const infoBoxEl = document.getElementById('infoBox');
         
-        // Função para pegar código da URL
+        // Função para atualizar status
+        function atualizarStatus(texto, tipo) {
+            statusEl.innerHTML = texto;
+            statusEl.className = 'status ' + tipo;
+        }
+        
+        // Função para atualizar informações
+        function atualizarInfo(codigo, nome, ip, data) {
+            codigoValueEl.textContent = codigo;
+            nomeValueEl.textContent = nome;
+            ipValueEl.textContent = ip;
+            dataValueEl.textContent = data;
+            infoBoxEl.style.display = 'block';
+        }
+        
+        // Pegar código da URL
         function getCodigoFromURL() {
             const urlParams = new URLSearchParams(window.location.search);
             return urlParams.get('c') || 
                    urlParams.get('codigo') || 
                    urlParams.get('code') || 
-                   'SEMCODIGO';
+                   null;
         }
         
-        // Função para mostrar status
-        function showStatus(message, type) {
-            statusDiv.textContent = message;
-            statusDiv.className = 'status ' + type;
-        }
-        
-        // Função para obter IP
+        // Coletar IP
         async function getIP() {
             try {
                 const response = await fetch('https://api.ipify.org?format=json');
                 const data = await response.json();
                 return data.ip;
             } catch (e) {
-                return 'desconhecido';
+                return 'Não disponível';
             }
         }
         
-        // Função principal
-        async function registrarAcesso() {
+        // Enviar registro
+        async function enviarRegistro(codigo) {
             try {
-                // Mostrar carregando
-                showStatus('Coletando informações...', 'loading');
+                atualizarStatus('<div class="loading-spinner"></div> Coletando informações...', 'warning');
                 
-                // Pegar código da URL
-                const codigo = getCodigoFromURL();
-                userInfo.textContent = `Código: ${codigo}`;
-                
-                // Coletar informações
                 const ip = await getIP();
-                const navegador = navigator.userAgent;
-                const sistema = navigator.platform;
-                const resolucao = `${window.screen.width}x${window.screen.height}`;
+                const dataAtual = new Date().toLocaleString();
+                
+                // Atualizar informações na tela
+                atualizarInfo(codigo, 'Buscando...', ip, dataAtual);
                 
                 // Preparar dados
                 const dados = {
-                    codigo: codigo,
+                    c: codigo,
                     ip: ip,
-                    agent: navegador,
-                    os: sistema,
-                    res: resolucao,
+                    agent: navigator.userAgent,
+                    os: navigator.platform,
+                    res: window.screen.width + 'x' + window.screen.height,
                     url: window.location.href
                 };
                 
-                // Enviar para Google Sheets
-                showStatus('Enviando dados...', 'loading');
+                atualizarStatus('<div class="loading-spinner"></div> Enviando para Google Sheets...', 'warning');
                 
+                // Enviar para Google Apps Script
                 const params = new URLSearchParams(dados);
                 const resposta = await fetch(`${GOOGLE_SCRIPT_URL}?${params}`);
                 const resultado = await resposta.text();
                 
-                // Mostrar resultado
-                if (resultado.includes('OK:')) {
-                    const nome = resultado.replace('OK: ', '').replace(' registrado', '');
-                    userInfo.textContent = `👤 ${nome}`;
-                    showStatus('✅ Registro concluído!', 'success');
-                    
-                    // Esconder status após 3 segundos
-                    setTimeout(() => {
-                        statusDiv.style.display = 'none';
-                    }, 3000);
+                console.log('Resposta do servidor:', resultado);
+                
+                // Analisar resposta
+                if (resultado.includes('SUCESSO:')) {
+                    const nome = resultado.replace('SUCESSO: ', '').split(' registrado')[0];
+                    atualizarInfo(codigo, nome, ip, dataAtual);
+                    atualizarStatus('✅ ' + resultado, 'success');
+                } else if (resultado.includes('AVISO:')) {
+                    atualizarInfo(codigo, 'Código não cadastrado', ip, dataAtual);
+                    atualizarStatus('⚠️ ' + resultado, 'warning');
+                } else if (resultado.includes('ERRO:')) {
+                    atualizarStatus('❌ ' + resultado, 'error');
                 } else {
-                    showStatus('⚠️ Registrado com código apenas', 'loading');
-                    userInfo.textContent = `Código: ${codigo} (sem nome cadastrado)`;
+                    atualizarStatus('📨 ' + resultado, 'warning');
                 }
                 
-                console.log('Registro completo:', dados);
-                
             } catch (erro) {
-                showStatus('❌ Erro no registro', 'error');
-                userInfo.textContent = 'Erro ao processar';
+                atualizarStatus('❌ Erro de conexão: ' + erro.message, 'error');
                 console.error('Erro:', erro);
             }
         }
         
-        // Executar quando carregar
-        window.addEventListener('load', registrarAcesso);
+        // Função principal
+        async function main() {
+            const codigo = getCodigoFromURL();
+            
+            if (!codigo) {
+                atualizarStatus('ℹ️ Nenhum código na URL. Adicione ?c=3 no final do link.', 'warning');
+                atualizarInfo('-', '-', '-', '-');
+                return;
+            }
+            
+            // Verificar se é código 3
+            if (codigo === '3') {
+                atualizarStatus('<div class="loading-spinner"></div> Processando código 3 (Davis)...', 'warning');
+            }
+            
+            await enviarRegistro(codigo);
+        }
+        
+        // Executar quando a página carregar
+        window.addEventListener('load', main);
+        
+        // Mostrar URL atual no console
+        console.log('URL atual:', window.location.href);
+        console.log('Código detectado:', getCodigoFromURL());
     </script>
 </body>
 </html>
