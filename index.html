@@ -1,810 +1,110 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html>
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro Automático de Acesso</title>
-    
+    <title>Selecione seu Nome</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1a2980 0%, #26d0ce 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            font-family: Arial, sans-serif;
             padding: 20px;
+            background: #f5f5f5;
         }
-        
-        .container {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            max-width: 900px;
-            width: 100%;
+        h1 {
+            color: #4285f4;
             text-align: center;
         }
-        
-        h1 {
-            color: #1a2980;
-            margin-bottom: 20px;
-            font-size: 2.5rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        .user-list {
+            max-width: 400px;
+            margin: 30px auto;
         }
-        
-        .subtitle {
-            color: #666;
-            font-size: 1.2rem;
-            margin-bottom: 40px;
-        }
-        
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 40px;
-        }
-        
-        .info-card {
-            background: #f8f9fa;
-            border-radius: 15px;
-            padding: 25px;
-            border: 2px solid #e9ecef;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .info-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            border-color: #1a2980;
-        }
-        
-        .info-card.sensitive {
-            background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%);
-            border-color: #fc8181;
-        }
-        
-        .info-label {
-            font-size: 0.85rem;
-            color: #666;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        
-        .info-value {
-            font-size: 1.3rem;
-            color: #2d3748;
-            font-weight: bold;
-            word-break: break-all;
-            font-family: 'Courier New', monospace;
-        }
-        
-        .sensitive .info-value {
-            color: #c53030;
-        }
-        
-        .status-container {
-            background: #f8f9fa;
-            border-radius: 15px;
-            padding: 30px;
-            margin-bottom: 30px;
-            border: 2px solid #e9ecef;
-        }
-        
-        .status-title {
-            font-size: 1.2rem;
-            color: #333;
-            margin-bottom: 20px;
-            font-weight: 600;
-        }
-        
-        .status-indicator {
-            display: inline-flex;
-            align-items: center;
-            gap: 15px;
-            padding: 15px 30px;
-            border-radius: 50px;
-            font-weight: 600;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
-        }
-        
-        .status-pending {
-            background: #fff3cd;
-            color: #856404;
-            border: 2px solid #ffeaa7;
-        }
-        
-        .status-success {
-            background: #d4edda;
-            color: #155724;
-            border: 2px solid #c3e6cb;
-        }
-        
-        .status-error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 2px solid #f5c6cb;
-        }
-        
-        .spinner {
-            width: 24px;
-            height: 24px;
-            border: 3px solid rgba(0, 0, 0, 0.1);
-            border-top-color: #1a2980;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        
-        .checkmark {
-            width: 24px;
-            height: 24px;
-            background: #28a745;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-        }
-        
-        .btn-group {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-top: 30px;
-        }
-        
-        .btn {
-            padding: 15px 30px;
-            border-radius: 50px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .btn-primary {
-            background: #1a2980;
-            color: white;
-        }
-        
-        .btn-primary:hover {
-            background: #152066;
-            transform: scale(1.05);
-        }
-        
-        .btn-secondary {
-            background: transparent;
-            color: #1a2980;
-            border-color: #1a2980;
-        }
-        
-        .btn-secondary:hover {
-            background: #1a2980;
-            color: white;
-        }
-        
-        .btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none !important;
-        }
-        
-        .time-display {
-            font-size: 0.9rem;
-            color: #666;
-            margin-top: 30px;
-            font-family: 'Courier New', monospace;
-            background: #f8f9fa;
-            padding: 10px 20px;
-            border-radius: 10px;
-            display: inline-block;
-        }
-        
-        footer {
-            margin-top: 40px;
-            color: #666;
-            font-size: 0.9rem;
-        }
-        
-        .warning {
-            background: #fff5f5;
-            border: 2px solid #fed7d7;
-            border-radius: 10px;
+        .user-item {
             padding: 15px;
-            margin: 20px 0;
-            color: #c53030;
-            font-size: 0.9rem;
+            margin: 10px 0;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            font-weight: bold;
         }
-        
-        @media (max-width: 768px) {
-            .container {
-                padding: 20px;
-            }
-            
-            h1 {
-                font-size: 2rem;
-            }
-            
-            .info-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .btn-group {
-                flex-direction: column;
-            }
+        .user-item:hover {
+            background: #4285f4;
+            color: white;
+            border-color: #4285f4;
+            transform: translateY(-2px);
+        }
+        #customUser {
+            padding: 15px;
+            width: 100%;
+            border: 2px solid #4285f4;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-top: 20px;
+            box-sizing: border-box;
+        }
+        #continueBtn {
+            background: #34a853;
+            color: white;
+            border: none;
+            padding: 15px;
+            width: 100%;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🖥️ Registro Corporativo de Acesso</h1>
-        <p class="subtitle">Coleta automática de informações do sistema</p>
+    <h1>Quem está acessando?</h1>
+    
+    <div class="user-list">
+        <div class="user-item" onclick="selectUser('João Silva')">👤 João Silva</div>
+        <div class="user-item" onclick="selectUser('Maria Santos')">👤 Maria Santos</div>
+        <div class="user-item" onclick="selectUser('Carlos Oliveira')">👤 Carlos Oliveira</div>
+        <div class="user-item" onclick="selectUser('Ana Pereira')">👤 Ana Pereira</div>
+        <div class="user-item" onclick="selectUser('Pedro Costa')">👤 Pedro Costa</div>
         
-        <div class="warning">
-            ⚠️ Algumas informações como nome de usuário do domínio podem não estar disponíveis por restrições de segurança do navegador.
-        </div>
+        <h3 style="text-align: center; margin-top: 30px;">Ou digite seu nome:</h3>
+        <input type="text" id="customUser" placeholder="Digite seu nome completo">
         
-        <div class="status-container">
-            <div class="status-title">Status do Registro:</div>
-            <div class="status-indicator status-pending" id="statusIndicator">
-                <div class="spinner"></div>
-                <span>Coletando informações do sistema...</span>
-            </div>
-            <div id="statusMessage" style="margin-top: 15px; font-size: 0.95rem; color: #666;"></div>
-        </div>
-        
-        <div class="info-grid" id="infoGrid">
-            <!-- As informações serão inseridas aqui via JavaScript -->
-        </div>
-        
-        <div class="time-display" id="timeDisplay">
-            Última atualização: Carregando...
-        </div>
-        
-        <div class="btn-group">
-            <button class="btn btn-primary" onclick="collectAndSendData()" id="refreshBtn">
-                🔄 Coletar Novamente
-            </button>
-            <button class="btn btn-secondary" onclick="copyAllData()" id="copyBtn">
-                📋 Copiar Dados
-            </button>
-        </div>
-        
-        <footer>
-            <p>Sistema de registro corporativo | Dados enviados para Google Sheets</p>
-            <p>Domínio: <span id="domainInfo">Verificando...</span></p>
-        </footer>
+        <button id="continueBtn" onclick="continueToRegister()">
+            ✅ Continuar
+        </button>
     </div>
-
+    
     <script>
-        // Configuração - SUBSTITUA com sua URL do Google Apps Script
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby-pe7jjk_GWwzIJoszKDcThV0AClgqUEkdd1YKymV4ywRuGu7zrIpKLcS68cqT_5oetw/exec';
+        let selectedUser = '';
         
-        // Elementos do DOM
-        const statusIndicator = document.getElementById('statusIndicator');
-        const statusMessage = document.getElementById('statusMessage');
-        const infoGrid = document.getElementById('infoGrid');
-        const timeDisplay = document.getElementById('timeDisplay');
-        const refreshBtn = document.getElementById('refreshBtn');
-        const copyBtn = document.getElementById('copyBtn');
-        const domainInfo = document.getElementById('domainInfo');
-        
-        // Cache para dados já coletados
-        let cachedData = null;
-        
-        // Função para detectar informações do domínio
-        function getDomainInfo() {
-            const hostname = window.location.hostname;
+        function selectUser(name) {
+            selectedUser = name;
+            document.getElementById('customUser').value = name;
             
-            // Verificar se está em domínio corporativo
-            const isCorporateDomain = hostname.includes('.local') || 
-                                     hostname.includes('.corp') || 
-                                     hostname.includes('.intranet') ||
-                                     hostname.includes('.empresa');
+            // Destacar selecionado
+            document.querySelectorAll('.user-item').forEach(item => {
+                item.style.background = item.textContent.includes(name) ? '#4285f4' : 'white';
+                item.style.color = item.textContent.includes(name) ? 'white' : 'black';
+            });
+        }
+        
+        function continueToRegister() {
+            let user = selectedUser || document.getElementById('customUser').value;
             
-            return {
-                hostname: hostname,
-                isCorporate: isCorporateDomain,
-                protocol: window.location.protocol,
-                port: window.location.port
-            };
-        }
-        
-        // Função para tentar obter nome de usuário do domínio
-        async function getDomainUsername() {
-            const methods = [
-                getUsernameViaWebRTC,
-                getUsernameViaActiveX,
-                getUsernameViaSSPI
-            ];
-            
-            for (const method of methods) {
-                try {
-                    const username = await method();
-                    if (username && username !== 'Desconhecido') {
-                        return username;
-                    }
-                } catch (e) {
-                    console.log(`Método ${method.name} falhou:`, e);
-                }
-            }
-            
-            return 'Desconhecido';
-        }
-        
-        // Método 1: WebRTC (funciona em alguns navegadores)
-        async function getUsernameViaWebRTC() {
-            try {
-                const peerConnection = new RTCPeerConnection({iceServers: []});
-                const dataChannel = peerConnection.createDataChannel('test');
-                
-                const offer = await peerConnection.createOffer();
-                await peerConnection.setLocalDescription(offer);
-                
-                // Analisar a descrição SDP
-                const sdp = peerConnection.localDescription.sdp;
-                const lines = sdp.split('\n');
-                
-                for (const line of lines) {
-                    if (line.startsWith('o=')) {
-                        const parts = line.split(' ');
-                        // O formato é: o=- 123456789 2 IN IP4 127.0.0.1
-                        // Às vezes contém o hostname
-                        if (parts.length >= 6) {
-                            const possibleUsername = parts[0].substring(2);
-                            if (possibleUsername && possibleUsername !== '-' && 
-                                possibleUsername.length > 1) {
-                                peerConnection.close();
-                                return possibleUsername.split('_')[0];
-                            }
-                        }
-                    }
-                }
-                
-                peerConnection.close();
-            } catch (e) {
-                console.log('WebRTC não disponível:', e);
-            }
-            
-            return 'Desconhecido';
-        }
-        
-        // Método 2: ActiveX (somente Internet Explorer em domínio)
-        function getUsernameViaActiveX() {
-            try {
-                // Verificar se é Internet Explorer
-                if (typeof ActiveXObject !== 'undefined') {
-                    // Tentar diferentes objetos ActiveX
-                    const objects = [
-                        'WScript.Network',
-                        'Scripting.FileSystemObject',
-                        'Shell.Application'
-                    ];
-                    
-                    for (const objName of objects) {
-                        try {
-                            const obj = new ActiveXObject(objName);
-                            if (objName === 'WScript.Network') {
-                                return obj.UserName || 'Desconhecido';
-                            }
-                        } catch (e) {
-                            continue;
-                        }
-                    }
-                }
-            } catch (e) {
-                console.log('ActiveX não disponível:', e);
-            }
-            return 'Desconhecido';
-        }
-        
-        // Método 3: Tentativa via credenciais (SSPI/Negotiate)
-        async function getUsernameViaSSPI() {
-            try {
-                // Tentar autenticação NTLM/Negotiate
-                const response = await fetch(window.location.href, {
-                    method: 'GET',
-                    credentials: 'include',
-                    headers: {
-                        'Authorization': 'Negotiate'
-                    }
-                });
-                
-                // Verificar headers de resposta
-                const authHeader = response.headers.get('WWW-Authenticate');
-                if (authHeader && authHeader.includes('Negotiate')) {
-                    // Estamos em um domínio com autenticação integrada
-                    return 'Usuário do Domínio (detectado)';
-                }
-                
-                // Tentar extrair de cookies
-                const cookies = document.cookie.split(';');
-                for (const cookie of cookies) {
-                    if (cookie.includes('USERNAME') || cookie.includes('USER')) {
-                        const value = cookie.split('=')[1]?.trim();
-                        if (value) return decodeURIComponent(value);
-                    }
-                }
-                
-            } catch (e) {
-                console.log('SSPI não disponível:', e);
-            }
-            
-            return 'Desconhecido';
-        }
-        
-        // Função para obter hostname do computador
-        function getComputerName() {
-            try {
-                // Tentar via WebRTC
-                const connection = new RTCPeerConnection();
-                const candidate = connection.localDescription;
-                
-                // Em alguns casos, o hostname pode vazar via WebRTC
-                if (candidate && candidate.sdp) {
-                    const match = candidate.sdp.match(/a=candidate:.+? (\S+)/);
-                    if (match && match[1]) {
-                        const parts = match[1].split('.');
-                        if (parts.length > 1) {
-                            return parts[0]; // Primeira parte do FQDN
-                        }
-                    }
-                }
-                
-                // Tentar via DNS reverso (limitado)
-                return window.location.hostname || 'Desconhecido';
-                
-            } catch (e) {
-                console.log('Não foi possível obter nome do computador:', e);
-                return 'Desconhecido';
-            }
-        }
-        
-        // Função para atualizar status na interface
-        function updateStatus(status, message = '') {
-            const statusText = statusIndicator.querySelector('span');
-            const spinner = statusIndicator.querySelector('.spinner');
-            
-            // Remover todas as classes de status
-            statusIndicator.className = 'status-indicator';
-            
-            switch(status) {
-                case 'loading':
-                    statusIndicator.classList.add('status-pending');
-                    statusText.textContent = 'Coletando informações do sistema...';
-                    spinner.style.display = 'block';
-                    break;
-                    
-                case 'success':
-                    statusIndicator.classList.add('status-success');
-                    statusText.textContent = '✓ Dados coletados e enviados!';
-                    spinner.style.display = 'none';
-                    break;
-                    
-                case 'error':
-                    statusIndicator.classList.add('status-error');
-                    statusText.textContent = '✗ Erro na coleta de dados';
-                    spinner.style.display = 'none';
-                    break;
-            }
-            
-            if (message) {
-                statusMessage.textContent = message;
-            }
-        }
-        
-        // Função para exibir informações na tela
-        function displayInfo(data) {
-            const infoCards = [
-                { 
-                    label: 'Usuário do Domínio', 
-                    value: data.domainUsername, 
-                    icon: '👤',
-                    sensitive: true 
-                },
-                { 
-                    label: 'Nome do Computador', 
-                    value: data.computerName, 
-                    icon: '💻',
-                    sensitive: true 
-                },
-                { 
-                    label: 'IP Público', 
-                    value: data.ip, 
-                    icon: '🌐' 
-                },
-                { 
-                    label: 'Localização', 
-                    value: data.location, 
-                    icon: '📍' 
-                },
-                { 
-                    label: 'Domínio', 
-                    value: data.domain.hostname, 
-                    icon: '🏢',
-                    sensitive: data.domain.isCorporate 
-                },
-                { 
-                    label: 'Navegador', 
-                    value: data.browser, 
-                    icon: '🔍' 
-                },
-                { 
-                    label: 'Sistema Operacional', 
-                    value: data.os, 
-                    icon: '⚙️' 
-                },
-                { 
-                    label: 'Resolução', 
-                    value: data.resolution, 
-                    icon: '📱' 
-                },
-                { 
-                    label: 'Idioma', 
-                    value: data.language, 
-                    icon: '🗣️' 
-                },
-                { 
-                    label: 'Conexão', 
-                    value: data.connection, 
-                    icon: '📶' 
-                }
-            ];
-            
-            infoGrid.innerHTML = infoCards.map(card => `
-                <div class="info-card ${card.sensitive ? 'sensitive' : ''}">
-                    <div class="info-label">${card.icon} ${card.label}</div>
-                    <div class="info-value">${card.value}</div>
-                </div>
-            `).join('');
-        }
-        
-        // Função para detectar navegador
-        function detectBrowser() {
-            const userAgent = navigator.userAgent;
-            if (userAgent.includes('Chrome') && !userAgent.includes('Edg')) return 'Chrome';
-            if (userAgent.includes('Firefox')) return 'Firefox';
-            if (userAgent.includes('Safari') && !userAgent.includes('Chrome')) return 'Safari';
-            if (userAgent.includes('Edg')) return 'Edge';
-            if (userAgent.includes('MSIE') || userAgent.includes('Trident/')) return 'Internet Explorer';
-            return 'Desconhecido';
-        }
-        
-        // Função para detectar sistema operacional
-        function detectOS() {
-            const userAgent = navigator.userAgent;
-            if (userAgent.includes('Windows NT 10')) return 'Windows 10/11';
-            if (userAgent.includes('Windows NT 6.3')) return 'Windows 8.1';
-            if (userAgent.includes('Windows NT 6.2')) return 'Windows 8';
-            if (userAgent.includes('Windows NT 6.1')) return 'Windows 7';
-            if (userAgent.includes('Windows NT 6.0')) return 'Windows Vista';
-            if (userAgent.includes('Windows NT 5.1')) return 'Windows XP';
-            if (userAgent.includes('Windows')) return 'Windows';
-            if (userAgent.includes('Mac')) return 'macOS';
-            if (userAgent.includes('Linux')) return 'Linux';
-            if (userAgent.includes('Android')) return 'Android';
-            if (userAgent.includes('iOS')) return 'iOS';
-            return 'Desconhecido';
-        }
-        
-        // Função para enviar dados para o Google Sheets
-        async function sendToGoogleSheets(data) {
-            try {
-                // Criar URL com parâmetros
-                const params = new URLSearchParams();
-                
-                // Adicionar todos os dados como parâmetros
-                Object.keys(data).forEach(key => {
-                    if (typeof data[key] === 'object') {
-                        params.append(key, JSON.stringify(data[key]));
-                    } else {
-                        params.append(key, data[key] || '');
-                    }
-                });
-                
-                // Fazer a requisição
-                const response = await fetch(`${GOOGLE_SCRIPT_URL}?${params.toString()}`);
-                
-                if (!response.ok) {
-                    throw new Error(`Erro HTTP: ${response.status}`);
-                }
-                
-                const result = await response.text();
-                return { success: true, message: 'Dados registrados!' };
-                
-            } catch (error) {
-                return { success: false, message: error.message };
-            }
-        }
-        
-        // Função para copiar todos os dados
-        async function copyAllData() {
-            if (!cachedData) {
-                alert('Coletando dados primeiro...');
+            if (!user.trim()) {
+                alert('Por favor, selecione ou digite seu nome.');
                 return;
             }
             
-            const text = `
-=== REGISTRO DE ACESSO CORPORATIVO ===
-Data/Hora: ${new Date().toLocaleString()}
-Usuário do Domínio: ${cachedData.domainUsername}
-Nome do Computador: ${cachedData.computerName}
-Domínio: ${cachedData.domain.hostname}
-IP Público: ${cachedData.ip}
-Localização: ${cachedData.location}
-Sistema Operacional: ${cachedData.os}
-Navegador: ${cachedData.browser}
-Resolução: ${cachedData.resolution}
-Idioma: ${cachedData.language}
-Conexão: ${cachedData.connection}
-            `.trim();
-            
-            try {
-                await navigator.clipboard.writeText(text);
-                alert('✅ Dados copiados para a área de transferência!');
-            } catch (err) {
-                console.log('Erro ao copiar:', err);
-                alert('❌ Erro ao copiar dados');
-            }
+            // Redirecionar para a página de registro com o nome
+            window.location.href = `registro.html?u=${encodeURIComponent(user)}`;
         }
         
-        // Função principal para coletar e enviar dados
-        async function collectAndSendData() {
-            // Atualizar UI para estado de carregamento
-            updateStatus('loading');
-            refreshBtn.disabled = true;
-            copyBtn.disabled = true;
-            
-            try {
-                // Coletar informações básicas
-                const urlParams = new URLSearchParams(window.location.search);
-                const userParam = urlParams.get('u') || 'visitante';
-                
-                // Obter informações do domínio
-                const domain = getDomainInfo();
-                domainInfo.textContent = domain.hostname || 'Não identificado';
-                
-                // Tentar obter nome de usuário do domínio
-                const domainUsername = await getDomainUsername();
-                
-                // Obter nome do computador
-                const computerName = getComputerName();
-                
-                // Coletar IP e localização
-                let ip = 'Desconhecido';
-                let location = 'Desconhecida';
-                
-                try {
-                    const ipResponse = await fetch('https://api.ipify.org?format=json');
-                    const ipData = await ipResponse.json();
-                    ip = ipData.ip;
-                    
-                    // Tentar obter localização
-                    try {
-                        const locationResponse = await fetch(`https://ipapi.co/${ip}/json/`);
-                        const locationData = await locationResponse.json();
-                        
-                        const city = locationData.city || '';
-                        const country = locationData.country_name || '';
-                        location = `${city}${city && country ? ', ' : ''}${country}` || 'Desconhecida';
-                        
-                    } catch (e) {
-                        console.log('Localização não disponível');
-                    }
-                    
-                } catch (error) {
-                    console.log('Erro ao obter IP:', error);
-                }
-                
-                // Preparar dados completos
-                const data = {
-                    user: userParam,
-                    domainUsername: domainUsername,
-                    computerName: computerName,
-                    domain: domain,
-                    ip: ip,
-                    location: location,
-                    browser: detectBrowser(),
-                    os: detectOS(),
-                    resolution: `${window.screen.width} × ${window.screen.height}`,
-                    language: navigator.language || navigator.userLanguage || 'Desconhecido',
-                    connection: navigator.connection ? 
-                        (navigator.connection.effectiveType || 'Desconhecida') : 'Desconhecida',
-                    agent: navigator.userAgent,
-                    referrer: document.referrer || 'Acesso Direto',
-                    timestamp: new Date().toISOString(),
-                    page: window.location.href,
-                    cookiesEnabled: navigator.cookieEnabled,
-                    platform: navigator.platform,
-                    vendor: navigator.vendor,
-                    online: navigator.onLine
-                };
-                
-                // Armazenar em cache
-                cachedData = data;
-                
-                // Exibir informações na tela
-                displayInfo(data);
-                
-                // Atualizar timestamp
-                const now = new Date();
-                timeDisplay.textContent = `Última atualização: ${now.toLocaleTimeString()} - ${now.toLocaleDateString()}`;
-                
-                // Enviar para Google Sheets
-                const result = await sendToGoogleSheets(data);
-                
-                // Atualizar status
-                if (result.success) {
-                    updateStatus('success', 'Dados registrados na planilha corporativa!');
-                    console.log('✅ Dados enviados:', data);
-                } else {
-                    updateStatus('error', `Erro: ${result.message}. Dados coletados mas não salvos.`);
-                    console.log('❌ Erro no envio:', result.message);
-                }
-                
-            } catch (error) {
-                updateStatus('error', `Erro na coleta: ${error.message}`);
-                console.log('❌ Erro na coleta:', error);
+        // Permitir Enter no campo de texto
+        document.getElementById('customUser').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                continueToRegister();
             }
-            
-            // Reativar botões
-            refreshBtn.disabled = false;
-            copyBtn.disabled = false;
-        }
-        
-        // Inicializar quando a página carregar
-        document.addEventListener('DOMContentLoaded', async function() {
-            // Coletar e enviar dados automaticamente
-            await collectAndSendData();
-            
-            // Tentar detectar informações adicionais periodicamente
-            setInterval(async () => {
-                if (document.hidden) return; // Não executar quando aba inativa
-                
-                try {
-                    // Atualizar apenas informações dinâmicas
-                    const now = new Date();
-                    timeDisplay.textContent = `Última atualização: ${now.toLocaleTimeString()} - ${now.toLocaleDateString()}`;
-                    
-                    // Atualizar status de conexão
-                    if (cachedData && navigator.connection) {
-                        const connection = navigator.connection.effectiveType || 'Desconhecida';
-                        if (cachedData.connection !== connection) {
-                            cachedData.connection = connection;
-                            document.querySelector('.info-card:nth-child(10) .info-value').textContent = connection;
-                        }
-                    }
-                } catch (e) {
-                    // Ignorar erros na atualização periódica
-                }
-            }, 30000); // A cada 30 segundos
         });
     </script>
 </body>
