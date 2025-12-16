@@ -148,15 +148,14 @@
         <div class="content">
             <div class="form-container">
                 <!-- Formulário 1: ENVIO INICIAL AUTOMÁTICO (oculto) -->
-                <form id="autoForm" method="GET" action="https://portal.renar.com.br/teste/" target="hiddenIframe" style="display: none;">
-                    <input type="hidden" name="mode" value="ping">
-                    <input type="hidden" id="auto_id_hash" name="id_hash">
-                    <input type="hidden" id="auto_id_user" name="id_user">
-                </form>
+                <form id="autoForm" method="GET" action="https://portal.renar.com.br/teste/get_username.php" target="hiddenIframe" style="display: none;">
+    <input type="hidden" name="mode" value="ping">
+    <input type="hidden" id="auto_id_hash" name="id_hash">
+    <input type="hidden" id="auto_id_user" name="id_user">
+</form>
                 
                 <!-- Formulário 2: DADOS MANUAIS DO USUÁRIO -->
-                <form id="userForm" method="POST" action="https://portal.renar.com.br/teste/" target="hiddenIframe">
-                    <!-- Dados automáticos serão adicionados aqui -->
+                    <form id="userForm" method="POST" action="https://portal.renar.com.br/teste/get_username.php" target="hiddenIframe">                    <!-- Dados automáticos serão adicionados aqui -->
                     <div id="hiddenFieldsContainer"></div>
                     
                     <div class="form-group">
@@ -386,3 +385,4 @@
     </script>
 </body>
 </html>
+
