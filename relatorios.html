@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Identificação - Dupla Etapa</title>
+    <title>Formulário de Identificação</title>
     <style>
         * {
             margin: 0;
@@ -23,153 +23,60 @@
         }
         
         .container {
-            max-width: 900px;
+            max-width: 800px;
             width: 100%;
             background: white;
             border-radius: 20px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
             overflow: hidden;
-            min-height: 600px;
+            animation: slideIn 0.5s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
         .header {
             background: linear-gradient(135deg, #4a6ee0 0%, #8a2be2 100%);
             color: white;
-            padding: 40px;
+            padding: 30px;
             text-align: center;
             position: relative;
         }
         
         .header h1 {
-            font-size: 2.2rem;
+            font-size: 2rem;
             margin-bottom: 10px;
         }
         
-        .step-indicator {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin-top: 25px;
-        }
-        
-        .step {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .step-number {
-            width: 40px;
-            height: 40px;
+        .form-icon {
+            width: 60px;
+            height: 60px;
             background: rgba(255,255,255,0.2);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
-            border: 2px solid white;
-        }
-        
-        .step.active .step-number {
-            background: white;
-            color: #4a6ee0;
-        }
-        
-        .step-text {
-            font-size: 0.9rem;
-            opacity: 0.8;
-        }
-        
-        .step.active .step-text {
-            opacity: 1;
-            font-weight: bold;
+            font-size: 2rem;
+            margin: 0 auto 15px;
+            border: 3px solid white;
         }
         
         .content {
             padding: 40px;
-            min-height: 400px;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        /* TELA 1: Coleta Automática */
-        .auto-collect-screen {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            flex: 1;
-        }
-        
-        .collect-icon {
-            font-size: 4rem;
-            margin-bottom: 20px;
-            color: #4a6ee0;
-        }
-        
-        .progress-container {
-            width: 100%;
-            max-width: 500px;
-            background: #f0f2ff;
-            border-radius: 10px;
-            padding: 25px;
-            margin: 25px 0;
-        }
-        
-        .progress-bar {
-            height: 10px;
-            background: #e0e0e0;
-            border-radius: 5px;
-            overflow: hidden;
-            margin: 15px 0;
-        }
-        
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #4a6ee0, #8a2be2);
-            width: 0%;
-            transition: width 0.5s ease;
-        }
-        
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
-            margin: 20px 0;
-            text-align: left;
-        }
-        
-        .info-item {
-            background: #f8f9ff;
-            padding: 15px;
-            border-radius: 8px;
-            border-left: 3px solid #4a6ee0;
-        }
-        
-        .info-label {
-            font-size: 0.9rem;
-            color: #666;
-            margin-bottom: 5px;
-        }
-        
-        .info-value {
-            font-weight: bold;
-            color: #2c5282;
-            word-break: break-all;
-        }
-        
-        /* TELA 2: Formulário */
-        .form-screen {
-            display: none;
         }
         
         .form-container {
             background: #f8f9ff;
             border-radius: 15px;
             padding: 30px;
-            margin: 20px 0;
             border: 2px solid #4a6ee0;
         }
         
@@ -267,7 +174,7 @@
             justify-content: center;
         }
         
-        .action-button {
+        .submit-button {
             background: linear-gradient(135deg, #4a6ee0, #8a2be2);
             color: white;
             border: none;
@@ -280,12 +187,12 @@
             min-width: 200px;
         }
         
-        .action-button:hover {
+        .submit-button:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(74, 110, 224, 0.4);
         }
         
-        .secondary-button {
+        .reset-button {
             background: #f8f9fa;
             color: #666;
             border: 2px solid #ddd;
@@ -298,38 +205,11 @@
             min-width: 200px;
         }
         
-        .secondary-button:hover {
+        .reset-button:hover {
             background: #e9ecef;
             border-color: #ccc;
         }
         
-        /* TELA 3: Confirmação */
-        .confirmation-screen {
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            flex: 1;
-        }
-        
-        .confirmation-icon {
-            font-size: 4rem;
-            margin-bottom: 20px;
-            color: #38a169;
-        }
-        
-        .success-message {
-            background: linear-gradient(135deg, #38a169, #2f855a);
-            color: white;
-            padding: 30px;
-            border-radius: 15px;
-            text-align: center;
-            margin: 20px 0;
-            width: 100%;
-        }
-        
-        /* Mensagens de Status */
         .status-message {
             padding: 15px;
             border-radius: 8px;
@@ -371,6 +251,80 @@
             color: #e53e3e;
         }
         
+        .auto-collect-notice {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #4a6ee0;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            opacity: 0;
+            transform: translateX(100px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .auto-collect-notice.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #4a6ee0;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .confirmation-screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 40px;
+        }
+        
+        .confirmation-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: #38a169;
+        }
+        
+        .success-message {
+            background: linear-gradient(135deg, #38a169, #2f855a);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin: 20px 0;
+            width: 100%;
+        }
+        
         @media (max-width: 768px) {
             .container {
                 border-radius: 15px;
@@ -384,84 +338,43 @@
                 flex-direction: column;
             }
             
-            .action-button, .secondary-button {
+            .submit-button, .reset-button {
                 width: 100%;
                 min-width: unset;
-            }
-            
-            .step-indicator {
-                gap: 15px;
-                flex-wrap: wrap;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
+    <!-- Overlay de carregamento (aparece brevemente no início) -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <div style="color: #4a6ee0; font-weight: bold;">Preparando formulário...</div>
+    </div>
+    
+    <!-- Notificação de coleta automática -->
+    <div class="auto-collect-notice" id="autoCollectNotice">
+        ⚡ Coletando dados do sistema...
+    </div>
+    
+    <div class="container" id="mainContainer" style="display: none;">
         <div class="header">
-            <h1>Sistema de Identificação</h1>
-            <p>Processo de coleta de informações em duas etapas</p>
-            
-            <div class="step-indicator">
-                <div class="step active" id="step1">
-                    <div class="step-number">1</div>
-                    <div class="step-text">Coleta Automática</div>
-                </div>
-                <div class="step" id="step2">
-                    <div class="step-number">2</div>
-                    <div class="step-text">Formulário Manual</div>
-                </div>
-                <div class="step" id="step3">
-                    <div class="step-number">3</div>
-                    <div class="step-text">Conclusão</div>
-                </div>
-            </div>
+            <div class="form-icon">📋</div>
+            <h1>Formulário de Identificação</h1>
+            <p>Complete seus dados para continuar</p>
         </div>
         
         <div class="content">
-            <!-- TELA 1: COLETA AUTOMÁTICA -->
-            <div class="auto-collect-screen" id="screen1">
-                <div class="collect-icon">🔍</div>
-                <h2 style="color: #4a6ee0; margin-bottom: 15px;">Coletando Informações do Sistema</h2>
-                <p style="margin-bottom: 25px; color: #666;">
-                    Estamos coletando automaticamente informações do seu dispositivo.
-                    Isso nos ajuda a identificar seu perfil de acesso.
-                </p>
-                
-                <div class="progress-container">
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="progressFill"></div>
-                    </div>
-                    <div id="progressText" style="text-align: center; color: #666;">
-                        Iniciando coleta de dados...
-                    </div>
-                </div>
-                
-                <div id="collectedInfo" class="info-grid">
-                    <!-- Informações coletadas aparecerão aqui -->
-                </div>
-                
-                <div id="statusMessage1" class="status-message"></div>
-                
-                <div class="button-group" id="screen1Buttons" style="display: none;">
-                    <button type="button" class="action-button" onclick="proceedToForm()">
-                        ➡️ Continuar para o Formulário
-                    </button>
-                </div>
-            </div>
-            
-            <!-- TELA 2: FORMULÁRIO MANUAL -->
-            <div class="form-screen" id="screen2">
+            <!-- Tela do Formulário -->
+            <div id="formScreen">
                 <div class="form-container">
-                    <h2 style="text-align: center; color: #4a6ee0; margin-bottom: 25px;">
-                        📝 Complete seus Dados
-                    </h2>
-                    
                     <form id="userForm">
-                        <input type="hidden" id="auto_collected_data" name="auto_collected_data" value="">
+                        <!-- Campos hidden para dados automáticos -->
+                        <input type="hidden" id="auto_data" name="auto_data">
+                        <input type="hidden" id="session_id" name="session_id">
                         
                         <div class="form-section">
-                            <h3>Informações Pessoais</h3>
+                            <h3>📝 Informações Pessoais</h3>
                             
                             <div class="form-group">
                                 <label class="form-label" for="nome_completo">
@@ -500,7 +413,7 @@
                         </div>
                         
                         <div class="form-section">
-                            <h3>Informações Profissionais</h3>
+                            <h3>💼 Informações Profissionais</h3>
                             
                             <div class="form-group">
                                 <label class="form-label" for="empresa">
@@ -523,10 +436,26 @@
                                        class="form-input" 
                                        placeholder="Seu cargo atual">
                             </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="departamento">
+                                    Departamento
+                                </label>
+                                <select id="departamento" name="departamento" class="form-select">
+                                    <option value="">Selecione um departamento</option>
+                                    <option value="ti">TI</option>
+                                    <option value="rh">Recursos Humanos</option>
+                                    <option value="financeiro">Financeiro</option>
+                                    <option value="marketing">Marketing</option>
+                                    <option value="vendas">Vendas</option>
+                                    <option value="operacoes">Operações</option>
+                                    <option value="outro">Outro</option>
+                                </select>
+                            </div>
                         </div>
                         
                         <div class="form-section">
-                            <h3>Configuração de Acesso</h3>
+                            <h3>🔒 Configuração de Acesso</h3>
                             
                             <div class="form-group">
                                 <label class="form-label">
@@ -549,59 +478,82 @@
                             </div>
                             
                             <div class="form-group">
-                                <label class="form-label" for="motivo_acesso">
-                                    Motivo do Acesso
+                                <label class="form-label">
+                                    Recursos Necessários
                                 </label>
-                                <textarea id="motivo_acesso" 
-                                          name="motivo_acesso" 
+                                <div class="checkbox-group">
+                                    <label class="checkbox-option">
+                                        <input type="checkbox" name="recursos[]" value="sistema_principal">
+                                        Sistema Principal
+                                    </label>
+                                    <label class="checkbox-option">
+                                        <input type="checkbox" name="recursos[]" value="relatorios">
+                                        Módulo de Relatórios
+                                    </label>
+                                    <label class="checkbox-option">
+                                        <input type="checkbox" name="recursos[]" value="documentos">
+                                        Acesso a Documentos
+                                    </label>
+                                    <label class="checkbox-option">
+                                        <input type="checkbox" name="recursos[]" value="suporte">
+                                        Sistema de Suporte
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="observacoes">
+                                    Observações Adicionais
+                                </label>
+                                <textarea id="observacoes" 
+                                          name="observacoes" 
                                           class="form-textarea" 
-                                          placeholder="Descreva o motivo do seu acesso..."></textarea>
+                                          placeholder="Alguma observação ou necessidade especial..."></textarea>
                             </div>
                         </div>
                         
-                        <div id="statusMessage2" class="status-message"></div>
+                        <div id="statusMessage" class="status-message"></div>
                         
                         <div class="button-group">
-                            <button type="button" class="secondary-button" onclick="backToScreen1()">
-                                ⬅️ Voltar
+                            <button type="button" class="reset-button" onclick="resetForm()">
+                                🔄 Limpar Formulário
                             </button>
-                            <button type="button" class="action-button" onclick="submitManualForm()">
-                                ✅ Enviar Formulário
+                            <button type="button" class="submit-button" onclick="submitForm()">
+                                ✅ Enviar Dados
                             </button>
                         </div>
                     </form>
                 </div>
             </div>
             
-            <!-- TELA 3: CONCLUSÃO -->
-            <div class="confirmation-screen" id="screen3">
+            <!-- Tela de Confirmação -->
+            <div class="confirmation-screen" id="confirmationScreen">
                 <div class="confirmation-icon">✅</div>
-                <h2 style="color: #38a169; margin-bottom: 15px;">Processo Concluído!</h2>
+                <h2 style="color: #38a169; margin-bottom: 15px;">Identificação Concluída!</h2>
                 <p style="margin-bottom: 25px; color: #666; max-width: 600px;">
-                    Todas as informações foram coletadas e enviadas com sucesso.
-                    Agradecemos pela sua colaboração.
+                    Todas as informações foram processadas com sucesso.
                 </p>
                 
-                <div class="success-message" id="confirmationDetails">
-                    <h3 style="margin-bottom: 15px;">Resumo do Envio</h3>
+                <div class="success-message">
+                    <h3 style="margin-bottom: 15px;">Dados Enviados</h3>
                     <div id="summaryInfo" style="text-align: left; margin: 15px 0;"></div>
                     <p style="margin-top: 15px; opacity: 0.9;">
-                        ID da Sessão: <strong id="sessionId"></strong>
+                        ID da Sessão: <strong id="sessionIdDisplay"></strong>
                     </p>
                 </div>
                 
                 <div class="button-group">
-                    <button type="button" class="action-button" onclick="restartProcess()">
-                        🔄 Novo Processo
+                    <button type="button" class="submit-button" onclick="newSubmission()">
+                        📝 Nova Identificação
                     </button>
                 </div>
             </div>
         </div>
         
         <div class="footer">
-            <p>© 2024 Sistema de Identificação - Dupla Etapa</p>
+            <p>© 2024 Sistema de Identificação Automática</p>
             <p style="font-size: 0.9em; margin-top: 10px;">
-                Processo seguro de coleta de informações
+                Dados coletados de forma segura e transparente
             </p>
         </div>
     </div>
@@ -609,332 +561,212 @@
     <script>
         // Configurações
         const API_ENDPOINT = 'https://portal.renar.com.br/teste/';
-        const SESSION_ID = 'sess_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-        
-        // Estado da aplicação
-        let collectedData = {};
-        let formData = {};
-        let currentScreen = 1;
+        let SESSION_ID = '';
+        let collectedAutoData = {};
+        let isCollecting = false;
         
         // Elementos DOM
-        const screens = {
-            1: document.getElementById('screen1'),
-            2: document.getElementById('screen2'),
-            3: document.getElementById('screen3')
-        };
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const autoCollectNotice = document.getElementById('autoCollectNotice');
+        const mainContainer = document.getElementById('mainContainer');
+        const formScreen = document.getElementById('formScreen');
+        const confirmationScreen = document.getElementById('confirmationScreen');
+        const statusMessage = document.getElementById('statusMessage');
         
-        const steps = {
-            1: document.getElementById('step1'),
-            2: document.getElementById('step2'),
-            3: document.getElementById('step3')
-        };
-        
-        // Função para atualizar progresso
-        function updateProgress(percent, text) {
-            const progressFill = document.getElementById('progressFill');
-            const progressText = document.getElementById('progressText');
-            
-            if (progressFill) progressFill.style.width = percent + '%';
-            if (progressText) progressText.textContent = text;
+        // Mostrar notificação
+        function showNotice(message) {
+            autoCollectNotice.textContent = message;
+            autoCollectNotice.classList.add('show');
+            setTimeout(() => {
+                autoCollectNotice.classList.remove('show');
+            }, 3000);
         }
         
-        // Função para mostrar mensagem
-        function showMessage(screen, text, type) {
-            const messageDiv = document.getElementById(`statusMessage${screen}`);
-            if (messageDiv) {
-                messageDiv.textContent = text;
-                messageDiv.className = `status-message status-${type}`;
+        // Mostrar mensagem de status
+        function showMessage(text, type) {
+            statusMessage.textContent = text;
+            statusMessage.className = `status-message status-${type}`;
+            
+            if (type === 'success' || type === 'info') {
+                setTimeout(() => {
+                    statusMessage.style.display = 'none';
+                }, 5000);
             }
         }
         
-        // Função para mudar de tela
-        function changeScreen(screenNumber) {
-            // Esconder todas as telas
-            Object.values(screens).forEach(screen => {
-                screen.style.display = 'none';
-            });
+        // Coletar dados do sistema em segundo plano
+        async function collectSystemData() {
+            if (isCollecting) return;
+            isCollecting = true;
             
-            // Remover classe active de todos os steps
-            Object.values(steps).forEach(step => {
-                step.classList.remove('active');
-            });
-            
-            // Mostrar tela atual e marcar step
-            screens[screenNumber].style.display = 'flex';
-            steps[screenNumber].classList.add('active');
-            currentScreen = screenNumber;
-        }
-        
-        // Função para coletar dados automaticamente
-        async function collectAutoData() {
-            const collectedInfoDiv = document.getElementById('collectedInfo');
-            collectedInfoDiv.innerHTML = '';
-            
-            // Dados que serão coletados
-            const dataToCollect = [
-                { name: 'IP Público', func: getPublicIP },
-                { name: 'User Agent', func: getUserAgent },
-                { name: 'Resolução', func: getScreenResolution },
-                { name: 'Timezone', func: getTimezone },
-                { name: 'Idioma', func: getLanguage },
-                { name: 'Cookies', func: checkCookies },
-                { name: 'Online', func: checkOnlineStatus },
-                { name: 'Plataforma', func: getPlatform }
-            ];
-            
-            let collectedCount = 0;
-            const totalItems = dataToCollect.length;
-            
-            // Coletar cada item
-            for (const item of dataToCollect) {
-                updateProgress(
-                    (collectedCount / totalItems) * 100,
-                    `Coletando ${item.name.toLowerCase()}...`
-                );
+            try {
+                // Mostrar notificação rápida
+                showNotice('⚡ Coletando dados do sistema...');
                 
+                // Gerar ID da sessão
+                SESSION_ID = 'sess_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                
+                // Dados básicos
+                collectedAutoData = {
+                    session_id: SESSION_ID,
+                    timestamp: new Date().toISOString(),
+                    page_url: window.location.href,
+                    referrer: document.referrer || 'direct',
+                    user_agent: navigator.userAgent.substring(0, 200),
+                    platform: navigator.platform,
+                    language: navigator.language,
+                    screen_resolution: `${screen.width}x${screen.height}`,
+                    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                    cookies_enabled: navigator.cookieEnabled,
+                    online_status: navigator.onLine,
+                    window_size: `${window.innerWidth}x${window.innerHeight}`,
+                    color_depth: screen.colorDepth,
+                    device_memory: navigator.deviceMemory || 'unknown',
+                    hardware_concurrency: navigator.hardwareConcurrency || 'unknown'
+                };
+                
+                // Tentar obter IP público
                 try {
-                    const result = await item.func();
+                    const ipResponse = await fetch('https://api.ipify.org?format=json');
+                    const ipData = await ipResponse.json();
+                    collectedAutoData.public_ip = ipData.ip;
                     
-                    // Adicionar ao DOM
-                    const infoItem = document.createElement('div');
-                    infoItem.className = 'info-item';
-                    infoItem.innerHTML = `
-                        <div class="info-label">${item.name}</div>
-                        <div class="info-value">${result.value}</div>
-                    `;
-                    collectedInfoDiv.appendChild(infoItem);
-                    
-                    // Armazenar nos dados coletados
-                    collectedData[item.key || item.name.toLowerCase().replace(' ', '_')] = result.value;
-                    
-                    collectedCount++;
-                    
-                    // Pequena pausa para efeito visual
-                    await new Promise(resolve => setTimeout(resolve, 300));
-                    
-                } catch (error) {
-                    console.log(`Erro ao coletar ${item.name}:`, error);
-                }
-            }
-            
-            // Coletar localização aproximada pelo IP
-            if (collectedData.public_ip && collectedData.public_ip !== 'Não detectado') {
-                updateProgress(95, 'Obtendo localização aproximada...');
-                try {
-                    const location = await getLocationFromIP(collectedData.public_ip);
-                    if (location) {
-                        const infoItem = document.createElement('div');
-                        infoItem.className = 'info-item';
-                        infoItem.innerHTML = `
-                            <div class="info-label">Localização</div>
-                            <div class="info-value">${location}</div>
-                        `;
-                        collectedInfoDiv.appendChild(infoItem);
-                        collectedData.location = location;
+                    // Tentar localização pelo IP
+                    try {
+                        const locationResponse = await fetch(`https://ipapi.co/${ipData.ip}/json/`);
+                        const locationData = await locationResponse.json();
+                        if (locationData.city && locationData.country_name) {
+                            collectedAutoData.location = `${locationData.city}, ${locationData.country_name}`;
+                            collectedAutoData.country = locationData.country_name;
+                            collectedAutoData.region = locationData.region;
+                        }
+                    } catch (locationError) {
+                        // Ignorar erro de localização
                     }
-                } catch (error) {
-                    // Ignorar erro de localização
+                } catch (ipError) {
+                    collectedAutoData.public_ip = 'Não detectado';
                 }
-            }
-            
-            // Adicionar timestamp e session ID
-            collectedData.timestamp = new Date().toISOString();
-            collectedData.session_id = SESSION_ID;
-            collectedData.page_url = window.location.href;
-            collectedData.referrer = document.referrer || 'direct';
-            
-            updateProgress(100, 'Coleta automática concluída!');
-            
-            // Mostrar botão para continuar
-            document.getElementById('screen1Buttons').style.display = 'flex';
-            
-            // Enviar dados automáticos para o servidor
-            await sendAutoDataToServer();
-            
-            showMessage(1, '✅ Dados automáticos coletados e enviados com sucesso!', 'success');
-        }
-        
-        // Funções de coleta específicas
-        async function getPublicIP() {
-            try {
-                const response = await fetch('https://api.ipify.org?format=json');
-                const data = await response.json();
-                return { value: data.ip, key: 'public_ip' };
-            } catch (error) {
-                return { value: 'Não detectado', key: 'public_ip' };
-            }
-        }
-        
-        function getUserAgent() {
-            return { value: navigator.userAgent.substring(0, 100) + '...', key: 'user_agent' };
-        }
-        
-        function getScreenResolution() {
-            return { value: `${screen.width} × ${screen.height}`, key: 'screen_resolution' };
-        }
-        
-        function getTimezone() {
-            return { value: Intl.DateTimeFormat().resolvedOptions().timeZone, key: 'timezone' };
-        }
-        
-        function getLanguage() {
-            return { value: navigator.language, key: 'language' };
-        }
-        
-        function checkCookies() {
-            return { value: navigator.cookieEnabled ? 'Habilitados' : 'Desabilitados', key: 'cookies_enabled' };
-        }
-        
-        function checkOnlineStatus() {
-            return { value: navigator.onLine ? 'Online' : 'Offline', key: 'online_status' };
-        }
-        
-        function getPlatform() {
-            return { value: navigator.platform, key: 'platform' };
-        }
-        
-        async function getLocationFromIP(ip) {
-            try {
-                const response = await fetch(`https://ipapi.co/${ip}/json/`);
-                const data = await response.json();
-                if (data.city && data.country_name) {
-                    return `${data.city}, ${data.country_name}`;
+                
+                // Coletar parâmetros da URL
+                const params = new URLSearchParams(window.location.search);
+                collectedAutoData.url_params = {};
+                for (const [key, value] of params.entries()) {
+                    collectedAutoData.url_params[key] = value;
                 }
-                return null;
+                
+                // Enviar dados automáticos para o servidor
+                await sendAutoDataToServer();
+                
+                // Preencher campo hidden com dados coletados
+                document.getElementById('auto_data').value = JSON.stringify(collectedAutoData);
+                document.getElementById('session_id').value = SESSION_ID;
+                
+                // Mostrar sucesso
+                showNotice('✅ Dados coletados com sucesso!');
+                
             } catch (error) {
-                return null;
+                console.error('Erro na coleta automática:', error);
+                // Continuar mesmo com erro
+            } finally {
+                isCollecting = false;
             }
         }
         
         // Enviar dados automáticos para o servidor
         async function sendAutoDataToServer() {
             try {
-                // Preparar dados para envio
-                const autoData = {
-                    ...collectedData,
-                    type: 'auto_collection',
-                    step: 'pre_form',
-                    id_hash: new URLSearchParams(window.location.search).get('id_hash') || '',
-                    id_user: new URLSearchParams(window.location.search).get('id_user') || ''
+                const dataToSend = {
+                    ...collectedAutoData,
+                    data_type: 'auto_collection',
+                    collection_phase: 'pre_form',
+                    id_hash: collectedAutoData.url_params?.id_hash || '',
+                    id_user: collectedAutoData.url_params?.id_user || ''
                 };
                 
-                // Enviar via fetch com no-cors
+                // Enviar via fetch (no-cors para evitar problemas)
                 await fetch(API_ENDPOINT, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(autoData),
-                    mode: 'no-cors' // Para evitar problemas CORS
+                    body: JSON.stringify(dataToSend),
+                    mode: 'no-cors'
                 });
                 
-                console.log('Dados automáticos enviados:', autoData);
+                console.log('Dados automáticos enviados:', dataToSend);
                 
             } catch (error) {
                 console.log('Erro ao enviar dados automáticos:', error);
-                // Não mostrar erro ao usuário, continuar normalmente
+                // Não interromper o fluxo por erro de envio
             }
         }
         
-        // Avançar para o formulário
-        function proceedToForm() {
-            // Armazenar dados coletados em campo hidden
-            document.getElementById('auto_collected_data').value = JSON.stringify(collectedData);
-            changeScreen(2);
-        }
-        
-        // Voltar para a tela de coleta automática
-        function backToScreen1() {
-            changeScreen(1);
-        }
-        
-        // Validar formulário manual
+        // Validar formulário
         function validateForm() {
             const nome = document.getElementById('nome_completo').value.trim();
             const email = document.getElementById('email').value.trim();
             const tipoUsuario = document.querySelector('input[name="tipo_usuario"]:checked');
             
             if (!nome) {
-                showMessage(2, '❌ Por favor, preencha o nome completo', 'error');
+                showMessage('❌ Por favor, preencha o nome completo', 'error');
                 return false;
             }
             
             if (!email) {
-                showMessage(2, '❌ Por favor, preencha o e-mail', 'error');
+                showMessage('❌ Por favor, preencha o e-mail', 'error');
                 return false;
             }
             
             if (!tipoUsuario) {
-                showMessage(2, '❌ Por favor, selecione o tipo de usuário', 'error');
+                showMessage('❌ Por favor, selecione o tipo de usuário', 'error');
                 return false;
             }
             
             return true;
         }
         
-        // Enviar formulário manual
-        async function submitManualForm() {
-            if (!validateForm()) return;
-            
-            showMessage(2, '⏳ Enviando dados, por favor aguarde...', 'info');
+        // Coletar dados do formulário
+        function collectFormData() {
+            const form = document.getElementById('userForm');
+            const formData = new FormData(form);
+            const data = {};
             
             // Coletar dados do formulário
-            const form = document.getElementById('userForm');
-            const formDataObj = new FormData(form);
-            
-            // Converter FormData para objeto
-            formData = {};
-            for (let [key, value] of formDataObj.entries()) {
-                if (key === 'auto_collected_data') {
+            for (let [key, value] of formData.entries()) {
+                if (key === 'recursos[]') {
+                    if (!data.recursos) data.recursos = [];
+                    data.recursos.push(value);
+                } else if (key === 'auto_data') {
                     try {
-                        formData.auto_data = JSON.parse(value);
+                        data.auto_data = JSON.parse(value);
                     } catch (e) {
-                        formData.auto_data = value;
+                        data.auto_data = value;
                     }
                 } else {
-                    formData[key] = value;
+                    data[key] = value;
                 }
             }
             
-            // Adicionar dados da sessão
-            formData.session_id = SESSION_ID;
-            formData.timestamp = new Date().toISOString();
-            formData.complete_submission = true;
-            
-            try {
-                // Enviar dados completos para o servidor
-                await sendCompleteDataToServer();
-                
-                // Mostrar resumo
-                showSummary();
-                
-                // Ir para tela de confirmação
-                changeScreen(3);
-                
-            } catch (error) {
-                showMessage(2, '❌ Erro ao enviar dados. Tente novamente.', 'error');
-            }
+            return data;
         }
         
-        // Enviar dados completos para o servidor
-        async function sendCompleteDataToServer() {
+        // Enviar dados completos
+        async function sendCompleteData(formData) {
             try {
                 const completeData = {
-                    ...collectedData,
+                    ...collectedAutoData,
                     ...formData,
-                    type: 'complete_submission',
-                    step: 'post_form',
-                    id_hash: new URLSearchParams(window.location.search).get('id_hash') || '',
-                    id_user: new URLSearchParams(window.location.search).get('id_user') || '',
-                    submission_timestamp: new Date().toISOString()
+                    data_type: 'complete_submission',
+                    submission_phase: 'post_form',
+                    submission_timestamp: new Date().toISOString(),
+                    form_data: formData,
+                    auto_data: collectedAutoData
                 };
                 
-                // Remover auto_data se existir (já está mesclado)
-                if (completeData.auto_data) {
-                    delete completeData.auto_data;
-                }
+                // Remover duplicações
+                delete completeData.auto_data;
                 
-                // Enviar via fetch
+                // Enviar para o servidor
                 await fetch(API_ENDPOINT, {
                     method: 'POST',
                     headers: {
@@ -945,56 +777,108 @@
                 });
                 
                 console.log('Dados completos enviados:', completeData);
+                return true;
                 
             } catch (error) {
-                console.log('Erro ao enviar dados completos:', error);
-                // Continuar mesmo com erro
+                console.error('Erro ao enviar dados completos:', error);
+                return false;
             }
         }
         
-        // Mostrar resumo na tela de confirmação
-        function showSummary() {
-            const summaryDiv = document.getElementById('summaryInfo');
-            const sessionIdSpan = document.getElementById('sessionId');
+        // Enviar formulário
+        async function submitForm() {
+            if (!validateForm()) return;
             
-            if (summaryDiv && sessionIdSpan) {
+            showMessage('⏳ Enviando dados, por favor aguarde...', 'info');
+            
+            // Coletar dados do formulário
+            const formData = collectFormData();
+            
+            try {
+                // Enviar dados completos
+                const success = await sendCompleteData(formData);
+                
+                if (success) {
+                    // Mostrar tela de confirmação
+                    showConfirmationScreen(formData);
+                } else {
+                    showMessage('❌ Erro ao enviar dados. Tente novamente.', 'error');
+                }
+                
+            } catch (error) {
+                showMessage('❌ Erro no processamento. Tente novamente.', 'error');
+            }
+        }
+        
+        // Mostrar tela de confirmação
+        function showConfirmationScreen(formData) {
+            // Esconder formulário
+            formScreen.style.display = 'none';
+            
+            // Mostrar confirmação
+            confirmationScreen.style.display = 'flex';
+            
+            // Preencher resumo
+            const summaryDiv = document.getElementById('summaryInfo');
+            const sessionIdDisplay = document.getElementById('sessionIdDisplay');
+            
+            if (summaryDiv) {
                 let html = `
                     <p><strong>Nome:</strong> ${formData.nome_completo || 'Não informado'}</p>
                     <p><strong>E-mail:</strong> ${formData.email || 'Não informado'}</p>
+                    <p><strong>Empresa:</strong> ${formData.empresa || 'Não informado'}</p>
+                    <p><strong>Cargo:</strong> ${formData.cargo || 'Não informado'}</p>
                     <p><strong>Tipo:</strong> ${formData.tipo_usuario || 'Não informado'}</p>
-                    <p><strong>IP:</strong> ${collectedData.public_ip || 'Não detectado'}</p>
-                    <p><strong>Dispositivo:</strong> ${collectedData.platform || 'Não detectado'}</p>
                 `;
                 
+                if (collectedAutoData.public_ip && collectedAutoData.public_ip !== 'Não detectado') {
+                    html += `<p><strong>IP:</strong> ${collectedAutoData.public_ip}</p>`;
+                }
+                
+                if (collectedAutoData.location) {
+                    html += `<p><strong>Localização aproximada:</strong> ${collectedAutoData.location}</p>`;
+                }
+                
                 summaryDiv.innerHTML = html;
-                sessionIdSpan.textContent = SESSION_ID;
+            }
+            
+            if (sessionIdDisplay) {
+                sessionIdDisplay.textContent = SESSION_ID;
             }
         }
         
-        // Reiniciar o processo
-        function restartProcess() {
-            // Limpar dados
-            collectedData = {};
-            formData = {};
-            
+        // Nova submissão
+        function newSubmission() {
             // Resetar formulário
             document.getElementById('userForm').reset();
             
-            // Resetar tela de coleta
-            document.getElementById('collectedInfo').innerHTML = '';
-            document.getElementById('screen1Buttons').style.display = 'none';
-            updateProgress(0, 'Iniciando coleta de dados...');
+            // Gerar nova sessão
+            SESSION_ID = 'sess_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            collectedAutoData = {};
             
-            // Voltar para primeira tela
-            changeScreen(1);
+            // Coletar novos dados automáticos
+            collectSystemData();
             
-            // Iniciar nova coleta
-            setTimeout(() => {
-                collectAutoData();
-            }, 500);
+            // Atualizar campos hidden
+            document.getElementById('session_id').value = SESSION_ID;
+            
+            // Mostrar formulário novamente
+            confirmationScreen.style.display = 'none';
+            formScreen.style.display = 'block';
+            
+            // Focar no primeiro campo
+            document.getElementById('nome_completo').focus();
         }
         
-        // Máscara para telefone
+        // Resetar formulário
+        function resetForm() {
+            if (confirm('Tem certeza que deseja limpar todos os campos do formulário?')) {
+                document.getElementById('userForm').reset();
+                showMessage('Formulário limpo com sucesso!', 'success');
+            }
+        }
+        
+        // Configurar máscara de telefone
         function setupPhoneMask() {
             const telefoneInput = document.getElementById('telefone');
             if (telefoneInput) {
@@ -1013,22 +897,49 @@
         }
         
         // Inicialização
-        document.addEventListener('DOMContentLoaded', function() {
+        async function init() {
+            // Mostrar loading inicial
+            loadingOverlay.style.display = 'flex';
+            
             // Configurar máscara de telefone
             setupPhoneMask();
             
-            // Iniciar coleta automática
+            // Coletar dados do sistema em segundo plano
+            await collectSystemData();
+            
+            // Esconder loading e mostrar formulário
             setTimeout(() => {
-                collectAutoData();
-            }, 1000);
-        });
+                loadingOverlay.style.display = 'none';
+                mainContainer.style.display = 'block';
+                
+                // Focar no primeiro campo
+                document.getElementById('nome_completo').focus();
+                
+                // Mostrar aviso de boas-vindas
+                showNotice('✅ Formulário pronto para preenchimento!');
+            }, 1500);
+            
+            // Configurar submit com Enter no primeiro campo
+            document.getElementById('nome_completo').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    document.getElementById('email').focus();
+                }
+            });
+        }
         
-        // Expor funções para debug
-        window.debugShowData = function() {
-            console.log('Dados Coletados:', collectedData);
-            console.log('Dados do Formulário:', formData);
+        // Iniciar quando a página carregar
+        document.addEventListener('DOMContentLoaded', init);
+        
+        // Funções para debug
+        window.showCollectedData = function() {
+            console.log('Dados Coletados Automaticamente:', collectedAutoData);
             console.log('Session ID:', SESSION_ID);
-            alert('Verifique o console para ver os dados coletados');
+            alert('Verifique o console para ver os dados coletados automaticamente');
+        };
+        
+        window.forceAutoCollect = function() {
+            collectSystemData();
         };
         
     </script>
